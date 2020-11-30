@@ -183,9 +183,6 @@ type Config struct {
 	// Component is a component used in logs
 	Component string
 
-	// Log optionally specifies the logger
-	Log log.FieldLogger
-
 	// FIPS means Teleport was started in a FedRAMP/FIPS 140-2 compliant
 	// configuration.
 	FIPS bool
@@ -239,11 +236,6 @@ func (cfg *Config) CheckAndSetDefaults() error {
 	if cfg.Component == "" {
 		cfg.Component = teleport.Component(teleport.ComponentProxy, teleport.ComponentServer)
 	}
-	if cfg.Log == nil {
-		cfg.Log = log.WithFields(log.Fields{
-			trace.Component: cfg.Component,
-		})
-	}
 	return nil
 }
 
@@ -262,11 +254,14 @@ func NewServer(cfg Config) (Server, error) {
 
 	ctx, cancel := context.WithCancel(cfg.Context)
 
+	entry := log.WithFields(log.Fields{
+		trace.Component: cfg.Component,
+	})
 	proxyWatcher, err := services.NewProxyWatcher(services.ProxyWatcherConfig{
 		Context:   ctx,
 		Component: cfg.Component,
 		Client:    cfg.LocalAuthClient,
-		Entry:     cfg.Log,
+		Entry:     entry,
 		ProxiesC:  make(chan []services.Server, 10),
 	})
 	if err != nil {
@@ -309,7 +304,6 @@ func NewServer(cfg Config) (Server, error) {
 		sshutils.AuthMethods{
 			PublicKey: srv.keyAuth,
 		},
-		sshutils.SetLogger(cfg.Log),
 		sshutils.SetLimiter(cfg.Limiter),
 		sshutils.SetCiphers(cfg.Ciphers),
 		sshutils.SetKEXAlgorithms(cfg.KEXAlgorithms),
