@@ -444,11 +444,13 @@ func (h *Handler) getUserContext(w http.ResponseWriter, r *http.Request, p httpr
 	if err != nil {
 		return nil, trace.Wrap(err)
 	}
-	roles, traits, err := services.ExtractFromCertificate(clt, cert)
+
+	assumedRoles, traits, err := services.ExtractFromCertificate(clt, cert)
 	if err != nil {
 		return nil, trace.Wrap(err)
 	}
-	roleset, err := services.FetchRoles(roles, clt, traits)
+
+	roleset, err := services.FetchRoles(assumedRoles, clt, traits)
 	if err != nil {
 		return nil, trace.Wrap(err)
 	}
@@ -463,6 +465,7 @@ func (h *Handler) getUserContext(w http.ResponseWriter, r *http.Request, p httpr
 		return nil, trace.Wrap(err)
 	}
 
+	userContext.RolesRequestable = ui.GetRolesRequestable(roleset, assumedRoles)
 	userContext.Cluster, err = ui.GetClusterDetails(site)
 	if err != nil {
 		return nil, trace.Wrap(err)

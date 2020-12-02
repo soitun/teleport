@@ -87,3 +87,53 @@ func (s *UserContextSuite) TestNewUserContext(c *check.C) {
 	c.Assert(err, check.IsNil)
 	c.Assert(userContext.AuthType, check.Equals, authSSO)
 }
+
+func (s *UserContextSuite) TestGetRolesRequestable(c *check.C) {
+	role1 := &services.RoleV3{}
+
+	// Test empty state combinations.
+	roles := GetRolesRequestable(nil, nil)
+	c.Assert(roles, check.DeepEquals, []string{})
+
+	roles = GetRolesRequestable(nil, []string{"foo"})
+	c.Assert(roles, check.DeepEquals, []string{})
+
+	roles = GetRolesRequestable([]services.Role{role1}, []string{"foo"})
+	c.Assert(roles, check.DeepEquals, []string{})
+
+	role1.SetAccessRequestConditions(services.Allow, services.AccessRequestConditions{
+		Roles: []string{"r1", "r2", "r3"},
+	})
+	role1.SetAccessRequestConditions(services.Deny, services.AccessRequestConditions{
+		Roles: []string{"r4"},
+	})
+
+	roles = GetRolesRequestable([]services.Role{role1}, nil)
+	c.Assert(roles, check.DeepEquals, []string{"r1", "r2", "r3"})
+
+	// Test for duplicate roles.
+	role2 := &services.RoleV3{}
+	role2.SetAccessRequestConditions(services.Allow, services.AccessRequestConditions{
+		Roles: []string{"r1", "r5"},
+	})
+	role2.SetAccessRequestConditions(services.Deny, services.AccessRequestConditions{
+		Roles: []string{"r2"},
+	})
+
+	// Test that deny trumps allow.
+	role3 := &services.RoleV3{}
+	role3.SetAccessRequestConditions(services.Allow, services.AccessRequestConditions{
+		Roles: []string{"r2", "r4"},
+	})
+
+	roleSet := []services.Role{role1, role2, role3}
+	roles = GetRolesRequestable(roleSet, nil)
+	c.Assert(roles, check.DeepEquals, []string{"r1", "r3", "r5"})
+
+	// Test assumed roles are not part of requestable roles.
+	roles = GetRolesRequestable(roleSet, []string{"r1", "r3"})
+	c.Assert(roles, check.DeepEquals, []string{"r5"})
+
+	roles = GetRolesRequestable(roleSet, []string{"r1", "r3", "r5"})
+	c.Assert(roles, check.DeepEquals, []string{})
+}

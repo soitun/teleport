@@ -83,6 +83,8 @@ type UserContext struct {
 	Cluster *Cluster `json:"cluster"`
 	// AccessStrategy describes how a user should access teleport resources.
 	AccessStrategy accessStrategy `json:"accessStrategy"`
+	// RolesRequestable are roles that the user can assume when requesting access.
+	RolesRequestable []string `json:"rolesRequestable"`
 }
 
 func getLogins(roleSet services.RoleSet) []string {
@@ -151,6 +153,32 @@ func getAccessStrategy(roleset services.RoleSet) accessStrategy {
 		Type:   strategy,
 		Prompt: prompt,
 	}
+}
+
+// GetRolesRequestable collects all denied and allowed roles for each roleset's access request conditions.
+// Afterwards, each allowed roles is ensured that it isn't a denied role or a role that is already assumed by user.
+//
+// Returns all roles that a user can request access to.
+func GetRolesRequestable(roleset services.RoleSet, assumedRoles []string) []string {
+	var allowedRoles []string
+	var deniedRoles []string
+
+	for _, role := range roleset {
+		deny := role.GetAccessRequestConditions(services.Deny)
+		allow := role.GetAccessRequestConditions(services.Allow)
+
+		allowedRoles = append(allowedRoles, allow.Roles...)
+		deniedRoles = append(deniedRoles, deny.Roles...)
+	}
+
+	rolesRequestable := []string{}
+	for _, role := range allowedRoles {
+		if !utils.SliceContainsStr(assumedRoles, role) && !utils.SliceContainsStr(deniedRoles, role) {
+			rolesRequestable = append(rolesRequestable, role)
+		}
+	}
+
+	return utils.Deduplicate(rolesRequestable)
 }
 
 // NewUserContext returns user context
