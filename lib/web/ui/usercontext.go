@@ -155,21 +155,30 @@ func getAccessStrategy(roleset services.RoleSet) accessStrategy {
 	}
 }
 
-// GetRolesRequestable collects all denied and allowed roles for each roleset's access request conditions.
+// GetRolesRequestable collects all denied and allowed roles from each roleset's access request conditions.
 // Afterwards, each allowed roles is ensured that it isn't a denied role or a role that is already assumed by user.
 //
 // Returns all roles that a user can request access to.
-func GetRolesRequestable(roleset services.RoleSet, assumedRoles []string) []string {
+func GetRolesRequestable(roleset services.RoleSet, staticRoles, assumedRoles []string) []string {
 	var allowedRoles []string
 	var deniedRoles []string
 
 	for _, role := range roleset {
+		// roleset may include dynamically assigned roles, exclude these
+		// to collect request conditions from static roles only.
+		if !utils.SliceContainsStr(staticRoles, role.GetName()) {
+			continue
+		}
+
 		deny := role.GetAccessRequestConditions(services.Deny)
 		allow := role.GetAccessRequestConditions(services.Allow)
 
 		allowedRoles = append(allowedRoles, allow.Roles...)
 		deniedRoles = append(deniedRoles, deny.Roles...)
 	}
+
+	allowedRoles = utils.Deduplicate(allowedRoles)
+	deniedRoles = utils.Deduplicate(deniedRoles)
 
 	rolesRequestable := []string{}
 	for _, role := range allowedRoles {
@@ -178,7 +187,7 @@ func GetRolesRequestable(roleset services.RoleSet, assumedRoles []string) []stri
 		}
 	}
 
-	return utils.Deduplicate(rolesRequestable)
+	return rolesRequestable
 }
 
 // NewUserContext returns user context

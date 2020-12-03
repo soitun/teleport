@@ -465,7 +465,7 @@ func (h *Handler) getUserContext(w http.ResponseWriter, r *http.Request, p httpr
 		return nil, trace.Wrap(err)
 	}
 
-	userContext.RolesRequestable = ui.GetRolesRequestable(roleset, assumedRoles)
+	userContext.RolesRequestable = ui.GetRolesRequestable(roleset, user.GetRoles(), assumedRoles)
 	userContext.Cluster, err = ui.GetClusterDetails(site)
 	if err != nil {
 		return nil, trace.Wrap(err)

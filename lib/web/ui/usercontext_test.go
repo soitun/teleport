@@ -90,15 +90,16 @@ func (s *UserContextSuite) TestNewUserContext(c *check.C) {
 
 func (s *UserContextSuite) TestGetRolesRequestable(c *check.C) {
 	role1 := &services.RoleV3{}
+	role1.SetName("role1")
 
 	// Test empty state combinations.
-	roles := GetRolesRequestable(nil, nil)
+	roles := GetRolesRequestable(nil, nil, nil)
 	c.Assert(roles, check.DeepEquals, []string{})
 
-	roles = GetRolesRequestable(nil, []string{"foo"})
+	roles = GetRolesRequestable(nil, nil, []string{"foo"})
 	c.Assert(roles, check.DeepEquals, []string{})
 
-	roles = GetRolesRequestable([]services.Role{role1}, []string{"foo"})
+	roles = GetRolesRequestable([]services.Role{role1}, []string{"role1"}, []string{"foo"})
 	c.Assert(roles, check.DeepEquals, []string{})
 
 	role1.SetAccessRequestConditions(services.Allow, services.AccessRequestConditions{
@@ -108,11 +109,16 @@ func (s *UserContextSuite) TestGetRolesRequestable(c *check.C) {
 		Roles: []string{"r4"},
 	})
 
-	roles = GetRolesRequestable([]services.Role{role1}, nil)
+	// Test only static roles gets processed.
+	roles = GetRolesRequestable([]services.Role{role1}, nil, nil)
+	c.Assert(roles, check.DeepEquals, []string{})
+
+	roles = GetRolesRequestable([]services.Role{role1}, []string{"role1"}, nil)
 	c.Assert(roles, check.DeepEquals, []string{"r1", "r2", "r3"})
 
-	// Test for duplicate roles.
+	// Test for duplicated allowed roles.
 	role2 := &services.RoleV3{}
+	role2.SetName("role2")
 	role2.SetAccessRequestConditions(services.Allow, services.AccessRequestConditions{
 		Roles: []string{"r1", "r5"},
 	})
@@ -120,20 +126,18 @@ func (s *UserContextSuite) TestGetRolesRequestable(c *check.C) {
 		Roles: []string{"r2"},
 	})
 
-	// Test that deny trumps allow.
+	// Test that deny trumps allowed roles in different roles.
 	role3 := &services.RoleV3{}
+	role3.SetName("role3")
 	role3.SetAccessRequestConditions(services.Allow, services.AccessRequestConditions{
 		Roles: []string{"r2", "r4"},
 	})
 
 	roleSet := []services.Role{role1, role2, role3}
-	roles = GetRolesRequestable(roleSet, nil)
+	roles = GetRolesRequestable(roleSet, []string{"role3", "role2", "role1"}, nil)
 	c.Assert(roles, check.DeepEquals, []string{"r1", "r3", "r5"})
 
 	// Test assumed roles are not part of requestable roles.
-	roles = GetRolesRequestable(roleSet, []string{"r1", "r3"})
+	roles = GetRolesRequestable(roleSet, []string{"role3", "role2", "role1"}, []string{"r1", "r3"})
 	c.Assert(roles, check.DeepEquals, []string{"r5"})
-
-	roles = GetRolesRequestable(roleSet, []string{"r1", "r3", "r5"})
-	c.Assert(roles, check.DeepEquals, []string{})
 }
