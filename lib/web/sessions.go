@@ -243,7 +243,9 @@ func (c *SessionContext) GetWebSession() services.WebSession {
 // ExtendWebSession creates a new web session for this user
 // based on the previous session
 func (c *SessionContext) ExtendWebSession(accessRequestID string) (services.WebSession, error) {
-	sess, err := c.clt.ExtendWebSession(c.user, c.sess.GetName(), accessRequestID)
+	sess, err := c.clt.ExtendWebSession(context.TODO(),
+		services.GetWebSessionRequest{User: c.user, SessionID: c.sess.GetName()},
+		accessRequestID)
 	if err != nil {
 		return nil, trace.Wrap(err)
 	}
@@ -392,7 +394,7 @@ func (s *sessionCache) clearExpiredSessions() {
 	defer s.Unlock()
 	expired := s.contexts.RemoveExpired(10)
 	if expired != 0 {
-		log.Infof("Removed %v expired sessions.", expired)
+		s.log.Infof("Removed %v expired sessions.", expired)
 	}
 }
 
@@ -500,7 +502,13 @@ func (s *sessionCache) InvalidateSession(ctx *SessionContext) error {
 	if err != nil {
 		return trace.Wrap(err)
 	}
-	err = clt.DeleteWebSession(ctx.GetUser(), ctx.GetWebSession().GetName())
+	err = clt.DeleteWebSession(
+		context.TODO(),
+		services.DeleteWebSessionRequest{
+			User:      ctx.GetUser(),
+			SessionID: ctx.GetWebSession().GetName(),
+		},
+	)
 	return trace.Wrap(err)
 }
 

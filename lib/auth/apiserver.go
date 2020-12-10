@@ -678,11 +678,11 @@ func (s *APIServer) deleteToken(auth ClientI, w http.ResponseWriter, r *http.Req
 
 func (s *APIServer) deleteWebSession(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
 	user, sid := p.ByName("user"), p.ByName("sid")
-	err := auth.DeleteWebSession(user, sid)
+	err := auth.DeleteWebSession(r.Context(), services.DeleteWebSessionRequest{User: user, SessionID: sid})
 	if err != nil {
 		return nil, trace.Wrap(err)
 	}
-	return message(fmt.Sprintf("session '%v' for user '%v' deleted", sid, user)), nil
+	return message(fmt.Sprintf("session %q for user %q deleted", sid, user)), nil
 }
 
 // sessionV1 is a V1 style web session, used in legacy v1 API
@@ -703,7 +703,7 @@ type sessionV1 struct {
 
 func (s *APIServer) getWebSession(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
 	user, sid := p.ByName("user"), p.ByName("sid")
-	sess, err := auth.GetWebSessionInfo(user, sid)
+	sess, err := auth.GetWebSessionInfo(r.Context(), services.GetWebSessionRequest{User: user, SessionID: sid})
 	if err != nil {
 		return nil, trace.Wrap(err)
 	}
@@ -778,13 +778,15 @@ func (s *APIServer) createWebSession(auth ClientI, w http.ResponseWriter, r *htt
 	}
 	user := p.ByName("user")
 	if req.PrevSessionID != "" {
-		sess, err := auth.ExtendWebSession(user, req.PrevSessionID, req.AccessRequestID)
+		sess, err := auth.ExtendWebSession(r.Context(),
+			services.GetWebSessionRequest{User: user, SessionID: req.PrevSessionID},
+			req.AccessRequestID)
 		if err != nil {
 			return nil, trace.Wrap(err)
 		}
 		return sess, nil
 	}
-	sess, err := auth.CreateWebSession(user)
+	sess, err := auth.CreateWebSession(r.Context(), user)
 	if err != nil {
 		return nil, trace.Wrap(err)
 	}
