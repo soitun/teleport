@@ -1506,77 +1506,68 @@ func (c *Client) DeleteWebSession(user string, sid string) error {
 	return trace.Wrap(err)
 }
 
-// GetWebSessions returns the list of all web sessions
-func (c *Client) GetWebSessionsV2(ctx context.Context) ([]services.WebSession, error) {
-	// TODO
-	// clt, err := c.grpc()
-	// if err != nil {
-	// 	return trace.Wrap(err)
-	// }
-	// resp, err = clt.GetWebSessions(ctx)
-	// if err != nil {
-	// 	return trail.FromGRPC(err)
-	// }
-	return nil, nil
-}
-
 // GetWebSession returns the web session for the specified request
 func (c *Client) GetWebSessionV2(ctx context.Context, req services.GetWebSessionRequest) (services.WebSession, error) {
-	// TODO
-	// clt, err := c.grpc()
-	// if err != nil {
-	// 	return trace.Wrap(err)
-	// }
-	// resp, err = clt.DeleteWebSession(ctx, &proto.GetWebSessionRequest{
-	// 	SessionID: req.SessionID,
-	// })
-	// if err != nil {
-	// 	return trail.FromGRPC(err)
-	// }
-	return nil, nil
+	clt, err := c.grpc()
+	if err != nil {
+		return nil, trace.Wrap(err)
+	}
+	resp, err := clt.GetWebSession(ctx, &proto.GetWebSessionRequest{
+		SessionID: req.SessionID,
+	})
+	if err != nil {
+		return nil, trail.FromGRPC(err)
+	}
+	return resp.Session, nil
 }
 
-// UpsertWebSession creates a new or updates an existing web session from the specified session
+// GetWebSessions returns the list of all web sessions
+func (c *Client) GetWebSessionsV2(ctx context.Context) ([]services.WebSession, error) {
+	clt, err := c.grpc()
+	if err != nil {
+		return nil, trace.Wrap(err)
+	}
+	resp, err := clt.GetWebSessions(ctx, &empty.Empty{})
+	if err != nil {
+		return nil, trail.FromGRPC(err)
+	}
+	out := make([]services.WebSession, 0, len(resp.Sessions))
+	for _, session := range resp.Sessions {
+		out = append(out, session)
+	}
+	return out, nil
+}
+
+// UpsertWebSession not implemented: can only be called locally.
 func (c *Client) UpsertWebSessionV2(ctx context.Context, session services.WebSession) error {
-	// TODO
-	// clt, err := c.grpc()
-	// if err != nil {
-	// 	return trace.Wrap(err)
-	// }
-	// resp, err = clt.UpsertWebSession(ctx, &proto.UpsertWebSessionRequest{})
-	// if err != nil {
-	// 	return trail.FromGRPC(err)
-	// }
-	return nil
+	return trace.NotImplemented(notImplementedMessage)
 }
 
 // DeleteWebSession deletes the web session specified with the given request
 func (c *Client) DeleteWebSessionV2(ctx context.Context, req services.DeleteWebSessionRequest) error {
-	// TODO
-	// clt, err := c.grpc()
-	// if err != nil {
-	// 	return trace.Wrap(err)
-	// }
-	// _, err = clt.DeleteWebSession(ctx, &proto.DeleteWebSessionRequest{
-	// 	SessionID: req.SessionID,
-	// })
-	// if err != nil {
-	// 	return trail.FromGRPC(err)
-	// }
+	clt, err := c.grpc()
+	if err != nil {
+		return trace.Wrap(err)
+	}
+	_, err = clt.DeleteWebSession(ctx, &proto.DeleteWebSessionRequest{
+		SessionID: req.SessionID,
+	})
+	if err != nil {
+		return trail.FromGRPC(err)
+	}
 	return nil
 }
 
 // DeleteAllWebSessions deletes the web session specified with the given request
 func (c *Client) DeleteAllWebSessionsV2(ctx context.Context) error {
-	// TODO
-	// clt, err := c.grpc()
-	// if err != nil {
-	// 	return trace.Wrap(err)
-	// }
-	// _, err = clt.DeleteAllWebSessions(ctx)
-	// if err != nil {
-	// 	return trail.FromGRPC(err)
-	// }
+	clt, err := c.grpc()
+	if err != nil {
+		return trace.Wrap(err)
+	}
+	_, err = clt.DeleteAllWebSessions(ctx, &empty.Empty{})
+	if err != nil {
+		return trail.FromGRPC(err)
+	}
 	return nil
 }
 
@@ -3254,12 +3245,6 @@ func (c *Client) GenerateAppToken(ctx context.Context, req jwt.GenerateAppTokenR
 	}
 
 	return resp.GetToken(), nil
-}
-
-// GetWebSession gets a regular web session.
-func (c *Client) GetWebSession(ctx context.Context, req services.GetWebSessionRequest) (services.WebSession, error) {
-	// TODO(dmitri)
-	return nil, trace.NotImplemented(notImplementedMessage)
 }
 
 // DeleteKubeService deletes a named kubernetes service.

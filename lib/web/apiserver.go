@@ -171,14 +171,14 @@ func (h *RewritingHandler) Close() error {
 // NewHandler returns a new instance of web proxy handler
 func NewHandler(cfg Config, opts ...HandlerOption) (*RewritingHandler, error) {
 	const apiPrefix = "/" + teleport.WebAPIVersion
-	lauth, err := newSessionCache(cfg.ProxyClient, []utils.NetAddr{cfg.AuthServers}, cfg.CipherSuites)
+	localAuth, err := newSessionCache(cfg.ProxyClient, cfg.AccessPoint, []utils.NetAddr{cfg.AuthServers}, cfg.CipherSuites)
 	if err != nil {
 		return nil, trace.Wrap(err)
 	}
 
 	h := &Handler{
 		cfg:  cfg,
-		auth: lauth,
+		auth: localAuth,
 		log:  newPackageLogger(),
 	}
 
@@ -1229,7 +1229,7 @@ func (h *Handler) createWebSession(w http.ResponseWriter, r *http.Request, p htt
 		return nil, trace.Wrap(err)
 	}
 
-	ctx, err := h.auth.ValidateSession(req.User, webSession.GetName())
+	ctx, err := h.auth.NewSession(req.User, webSession.GetName())
 	if err != nil {
 		h.log.WithError(err).Warnf("Access attempt denied for user %q.", req.User)
 		return nil, trace.AccessDenied("need auth")
@@ -1277,13 +1277,11 @@ func (h *Handler) renewSession(w http.ResponseWriter, r *http.Request, params ht
 	if err != nil {
 		return nil, trace.Wrap(err)
 	}
-	// transfer ownership over connections that were opened in the
-	// sessionContext
 	newContext, err := ctx.parent.ValidateSession(newSess.GetUser(), newSess.GetName())
 	if err != nil {
 		return nil, trace.Wrap(err)
 	}
-	newContext.AddClosers(ctx.TransferClosers()...)
+	ctx.parent.updateContext(newSess.GetUser(), newSess.GetName(), newContext)
 	if err := SetSession(w, newSess.GetUser(), newSess.GetName()); err != nil {
 		return nil, trace.Wrap(err)
 	}
@@ -1300,7 +1298,7 @@ func (h *Handler) changePasswordWithToken(w http.ResponseWriter, r *http.Request
 	if err != nil {
 		return nil, trace.Wrap(err)
 	}
-	ctx, err := h.auth.ValidateSession(sess.GetUser(), sess.GetName())
+	ctx, err := h.auth.NewSession(sess.GetUser(), sess.GetName())
 	if err != nil {
 		return nil, trace.Wrap(err)
 	}
@@ -1445,7 +1443,7 @@ func (h *Handler) createSessionWithU2FSignResponse(w http.ResponseWriter, r *htt
 	if err := SetSession(w, req.User, sess.GetName()); err != nil {
 		return nil, trace.Wrap(err)
 	}
-	ctx, err := h.auth.ValidateSession(req.User, sess.GetName())
+	ctx, err := h.auth.NewSession(req.User, sess.GetName())
 	if err != nil {
 		return nil, trace.AccessDenied("need auth")
 	}
