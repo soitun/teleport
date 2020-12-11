@@ -1433,11 +1433,11 @@ func (c *Client) GetU2FSignRequest(user string, password []byte) (*u2f.SignReque
 
 // ExtendWebSession creates a new web session for a user based on another
 // valid web session
-func (c *Client) ExtendWebSession(ctx context.Context, req services.GetWebSessionRequest, accessRequestID string) (services.WebSession, error) {
+func (c *Client) ExtendWebSession(user string, prevSessionID string, accessRequestID string) (services.WebSession, error) {
 	out, err := c.PostJSON(
-		c.Endpoint("users", req.User, "web", "sessions"),
+		c.Endpoint("users", user, "web", "sessions"),
 		createWebSessionReq{
-			PrevSessionID:   req.SessionID,
+			PrevSessionID:   prevSessionID,
 			AccessRequestID: accessRequestID,
 		},
 	)
@@ -1448,7 +1448,7 @@ func (c *Client) ExtendWebSession(ctx context.Context, req services.GetWebSessio
 }
 
 // CreateWebSession creates a new web session for a user
-func (c *Client) CreateWebSession(ctx context.Context, user string) (services.WebSession, error) {
+func (c *Client) CreateWebSession(user string) (services.WebSession, error) {
 	out, err := c.PostJSON(
 		c.Endpoint("users", user, "web", "sessions"),
 		createWebSessionReq{},
@@ -1491,19 +1491,93 @@ func (c *Client) AuthenticateSSHUser(req AuthenticateSSHRequest) (*SSHLoginRespo
 
 // GetWebSessionInfo checks if a web sesion is valid, returns session id in case if
 // it is valid, or error otherwise.
-func (c *Client) GetWebSessionInfo(ctx context.Context, req services.GetWebSessionRequest) (services.WebSession, error) {
+func (c *Client) GetWebSessionInfo(user string, sid string) (services.WebSession, error) {
 	out, err := c.Get(
-		c.Endpoint("users", req.User, "web", "sessions", req.SessionID), url.Values{})
+		c.Endpoint("users", user, "web", "sessions", sid), url.Values{})
 	if err != nil {
 		return nil, trace.Wrap(err)
 	}
 	return services.GetWebSessionMarshaler().UnmarshalWebSession(out.Bytes())
 }
 
-// DeleteWebSession deletes a web session specified with the given request
-func (c *Client) DeleteWebSession(ctx context.Context, req services.DeleteWebSessionRequest) error {
-	_, err := c.Delete(c.Endpoint("users", req.User, "web", "sessions", req.SessionID))
+// DeleteWebSession deletes the web session specified with sid for the given user
+func (c *Client) DeleteWebSession(user string, sid string) error {
+	_, err := c.Delete(c.Endpoint("users", user, "web", "sessions", sid))
 	return trace.Wrap(err)
+}
+
+// GetWebSessions returns the list of all web sessions
+func (c *Client) GetWebSessionsV2(ctx context.Context) ([]services.WebSession, error) {
+	// TODO
+	// clt, err := c.grpc()
+	// if err != nil {
+	// 	return trace.Wrap(err)
+	// }
+	// resp, err = clt.GetWebSessions(ctx)
+	// if err != nil {
+	// 	return trail.FromGRPC(err)
+	// }
+	return nil, nil
+}
+
+// GetWebSession returns the web session for the specified request
+func (c *Client) GetWebSessionV2(ctx context.Context, req services.GetWebSessionRequest) (services.WebSession, error) {
+	// TODO
+	// clt, err := c.grpc()
+	// if err != nil {
+	// 	return trace.Wrap(err)
+	// }
+	// resp, err = clt.DeleteWebSession(ctx, &proto.GetWebSessionRequest{
+	// 	SessionID: req.SessionID,
+	// })
+	// if err != nil {
+	// 	return trail.FromGRPC(err)
+	// }
+	return nil, nil
+}
+
+// UpsertWebSession creates a new or updates an existing web session from the specified session
+func (c *Client) UpsertWebSessionV2(ctx context.Context, session services.WebSession) error {
+	// TODO
+	// clt, err := c.grpc()
+	// if err != nil {
+	// 	return trace.Wrap(err)
+	// }
+	// resp, err = clt.UpsertWebSession(ctx, &proto.UpsertWebSessionRequest{})
+	// if err != nil {
+	// 	return trail.FromGRPC(err)
+	// }
+	return nil
+}
+
+// DeleteWebSession deletes the web session specified with the given request
+func (c *Client) DeleteWebSessionV2(ctx context.Context, req services.DeleteWebSessionRequest) error {
+	// TODO
+	// clt, err := c.grpc()
+	// if err != nil {
+	// 	return trace.Wrap(err)
+	// }
+	// _, err = clt.DeleteWebSession(ctx, &proto.DeleteWebSessionRequest{
+	// 	SessionID: req.SessionID,
+	// })
+	// if err != nil {
+	// 	return trail.FromGRPC(err)
+	// }
+	return nil
+}
+
+// DeleteAllWebSessions deletes the web session specified with the given request
+func (c *Client) DeleteAllWebSessionsV2(ctx context.Context) error {
+	// TODO
+	// clt, err := c.grpc()
+	// if err != nil {
+	// 	return trace.Wrap(err)
+	// }
+	// _, err = clt.DeleteAllWebSessions(ctx)
+	// if err != nil {
+	// 	return trail.FromGRPC(err)
+	// }
+	return nil
 }
 
 // GetUser returns a list of usernames registered in the system
@@ -3210,33 +3284,29 @@ func (c *Client) DeleteAllKubeServices(ctx context.Context) error {
 	return trace.Wrap(err)
 }
 
-// WebService implements features used by Web UI clients
 type WebService interface {
-	// GetWebSessionInfo checks if a web sesion is valid, returns session id in case
-	// it is valid, or error otherwise.
-	// The returned session is stripped off of secrets
-	GetWebSessionInfo(ctx context.Context, req services.GetWebSessionRequest) (services.WebSession, error)
+	// WebUIService implements web session support for UI clients
+	WebUIService
 
-	// ExtendWebSession creates a new web session for a user based on another
-	// valid web session
-	ExtendWebSession(ctx context.Context, req services.GetWebSessionRequest, accessRequestID string) (services.WebSession, error)
-
-	// CreateWebSession creates a new web session for a user
-	CreateWebSession(ctx context.Context, user string) (services.WebSession, error)
-
-	// FIXME(dmitri): this needs to implement a different set of APIs than required
-	// by the caching layer
-
-	// // DeleteWebSession deletes a web session for this user by id
-	// DeleteWebSession(ctx context.Context, req services.DeleteWebSessionRequest) error
-	// // GetWebSession returns the regular web session described with the specified request
-	// GetWebSession(context.Context, services.GetWebSessionRequest) (services.WebSession, error)
-
-	// WebSessionInterface defines regular web session features.
+	// WebSessionInterface defines regular session features.
 	services.WebSessionInterface
 
 	// AppSession defines application session features.
 	services.AppSession
+}
+
+// WebUIService implements features used by Web UI clients
+type WebUIService interface {
+	// GetWebSessionInfo checks if a web sesion is valid, returns session id in case if
+	// it is valid, or error otherwise.
+	GetWebSessionInfo(user string, sid string) (services.WebSession, error)
+	// ExtendWebSession creates a new web session for a user based on another
+	// valid web session
+	ExtendWebSession(user string, prevSessionID string, accessRequestID string) (services.WebSession, error)
+	// CreateWebSession creates a new web session for a user
+	CreateWebSession(user string) (services.WebSession, error)
+	// DeleteWebSession deletes a web session for this user by id
+	DeleteWebSession(user string, sid string) error
 }
 
 // IdentityService manages identities and users
