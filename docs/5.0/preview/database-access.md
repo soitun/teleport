@@ -55,7 +55,7 @@ See [release schedule](./upcoming-releases.md#release-schedule).
 
 !!! note
     This section explains how to configure an on-premise instance of PostgreSQL
-    to work with Teleport Database access. For information about configuring 
+    to work with Teleport Database access. For information about configuring
     AWS RDS/Aurora see the [section below](#aws-rdsaurora-postgresql).
 
 #### Create Certificate/Key Pair
@@ -260,7 +260,7 @@ teleport:
   - teleport.example.com:3080
 db_service:
   enabled: "yes"
-  # This section contains definitions of all databases proxied by this 
+  # This section contains definitions of all databases proxied by this
   # service, can contain multiple.
   databases:
     # Name of the database proxy instance, used to reference in CLI.
