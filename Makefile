@@ -417,7 +417,7 @@ buildbox-grpc:
 	protoc -I=.:$$PROTO_INCLUDE \
 		--proto_path=api/proto/auth \
 		--gofast_out=plugins=grpc:api/proto/auth \
-		auth.proto
+		authproto.proto
 
 	cd lib/wrappers && protoc -I=.:$$PROTO_INCLUDE \
 	  --gofast_out=plugins=grpc:.\
