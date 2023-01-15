@@ -93,7 +93,7 @@ require (
 	github.com/mdlayher/netlink v1.7.1
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/moby/term v0.0.0-20221128092401-c43b287e0e0f
-	github.com/pavlo-v-chernykh/keystore-go/v4 v4.4.0
+	github.com/pavlo-v-chernykh/keystore-go/v4 v4.4.1
 	github.com/pkg/sftp v1.13.5 // replaced
 	github.com/pquerna/otp v1.4.0
 	github.com/prometheus/client_golang v1.14.0
