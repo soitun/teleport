@@ -24,7 +24,7 @@ importers:
         version: 6.37.1
       '@floating-ui/react':
         specifier: ^0.27.8
-        version: 0.27.10(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        version: 0.27.11(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@grpc/grpc-js':
         specifier: 1.13.4
         version: 1.13.4
@@ -42,7 +42,7 @@ importers:
         version: 2.11.0
       '@tanstack/react-query':
         specifier: ^5.75.4
-        version: 5.79.0(react@19.1.0)
+        version: 5.79.1(react@19.1.0)
       '@uiw/codemirror-themes':
         specifier: ^4.23.12
         version: 4.23.12(@codemirror/view@6.37.1)
@@ -378,8 +378,8 @@ importers:
         specifier: 1.30.1
         version: 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/sdk-trace-web':
-        specifier: 1.30.1
-        version: 1.30.1(@opentelemetry/api@1.9.0)
+        specifier: 2.0.1
+        version: 2.0.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/semantic-conventions':
         specifier: 1.32.0
         version: 1.32.0
@@ -519,10 +519,10 @@ importers:
         version: 14.2.0
       zod:
         specifier: ^3.24.4
-        version: 3.25.46
+        version: 3.25.48
       zod-to-json-schema:
         specifier: ^3.24.5
-        version: 3.24.5(zod@3.25.46)
+        version: 3.24.5(zod@3.25.48)
 
 packages:
 
@@ -1736,17 +1736,23 @@ packages:
   '@floating-ui/core@1.7.0':
     resolution: {integrity: sha512-FRdBLykrPPA6P76GGGqlex/e7fbe0F1ykgxHYNXQsH/iTEtjMj/f9bpY5oQqbjt5VgZvgz/uKXbGuROijh3VLA==}
 
+  '@floating-ui/core@1.7.1':
+    resolution: {integrity: sha512-azI0DrjMMfIug/ExbBaeDVJXcY0a7EPvPjb2xAJPa4HeimBX+Z18HK8QQR3jb6356SnDDdxx+hinMLcJEDdOjw==}
+
   '@floating-ui/dom@1.7.0':
     resolution: {integrity: sha512-lGTor4VlXcesUMh1cupTUTDoCxMb0V6bm3CnxHzQcw8Eaf1jQbgQX4i02fYgT0vJ82tb5MZ4CZk1LRGkktJCzg==}
 
-  '@floating-ui/react-dom@2.1.2':
-    resolution: {integrity: sha512-06okr5cgPzMNBy+Ycse2A6udMi4bqwW/zgBF/rwjcNqWkyr82Mcg8b0vjX8OJpZFy/FKjJmw6wV7t44kK6kW7A==}
+  '@floating-ui/dom@1.7.1':
+    resolution: {integrity: sha512-cwsmW/zyw5ltYTUeeYJ60CnQuPqmGwuGVhG9w0PRaRKkAyi38BT5CKrpIbb+jtahSwUl04cWzSx9ZOIxeS6RsQ==}
+
+  '@floating-ui/react-dom@2.1.3':
+    resolution: {integrity: sha512-huMBfiU9UnQ2oBwIhgzyIiSpVgvlDstU8CX0AF+wS+KzmYMs0J2a3GwuFHV1Lz+jlrQGeC1fF+Nv0QoumyV0bA==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
 
-  '@floating-ui/react@0.27.10':
-    resolution: {integrity: sha512-2tQScvQgzeYAdReavy/ql0JimAruQ2qtDHQFlcXSv8WP/1S1/YaIftyvhGfHknIB6rns0K3P6CV/lw/Tjm5Oaw==}
+  '@floating-ui/react@0.27.11':
+    resolution: {integrity: sha512-ZVtJxk4gQceaAOm1p5TlNeUcSxvzEwbAkKPgLYfV2b3aavC9Up9OZ5qPWQrMCASzmXUtNK1VuKdrqZkhAYhaeQ==}
     peerDependencies:
       react: '>=17.0.0'
       react-dom: '>=17.0.0'
@@ -2657,11 +2663,11 @@ packages:
     resolution: {integrity: sha512-4BAffykYOgO+5nzBWYwE3W90sBgLJoUPRWWcL8wlyiM8IB8ipJz3UMJ9KXQd1RKQXpKp8Tutn80HZtWsu2u76w==}
     engines: {node: '>=10'}
 
-  '@tanstack/query-core@5.79.0':
-    resolution: {integrity: sha512-s+epTqqLM0/TbJzMAK7OEhZIzh63P9sWz5HEFc5XHL4FvKQXQkcjI8F3nee+H/xVVn7mrP610nVXwOytTSYd0w==}
+  '@tanstack/query-core@5.79.1':
+    resolution: {integrity: sha512-5DHdNc6UaLhSUgU8MsZnfqlQ8xCgeSFBqDN8DYhoho8qvxmWtVpLucNEJboc5mtLSSb6sbJ4nkFPAH3ZCyb5rA==}
 
-  '@tanstack/react-query@5.79.0':
-    resolution: {integrity: sha512-DjC4JIYZnYzxaTzbg3osOU63VNLP67dOrWet2cZvXgmgwAXNxfS52AMq86M5++ILuzW+BqTUEVMTjhrZ7/XBuA==}
+  '@tanstack/react-query@5.79.1':
+    resolution: {integrity: sha512-Kdoqn+ms+AdrVSE4ljEIjDbQdc+qmJdakUI4ypAw1ROe8zDxf8botuMBJ3gX+ciKLXUq3uadUiOHsc9XX9LsuA==}
     peerDependencies:
       react: ^18 || ^19
 
@@ -7186,8 +7192,8 @@ packages:
     peerDependencies:
       zod: ^3.24.1
 
-  zod@3.25.46:
-    resolution: {integrity: sha512-IqRxcHEIjqLd4LNS/zKffB3Jzg3NwqJxQQ0Ns7pdrvgGkwQsEBdEQcOHaBVqvvZArShRzI39+aMST3FBGmTrLQ==}
+  zod@3.25.48:
+    resolution: {integrity: sha512-0X1mz8FtgEIvaxGjdIImYpZEaZMrund9pGXm3M6vM7Reba0e2eI71KPjSCGXBfwKDPwPoywf6waUKc3/tFvX2Q==}
 
   zone.js@0.15.0:
     resolution: {integrity: sha512-9oxn0IIjbCZkJ67L+LkhYWRyAy7axphb3VgE2MBDlOqnmHMPWGYMxJxBYFueFq/JGY2GMwS0rU+UCLunEmy5UA==}
@@ -8616,20 +8622,29 @@ snapshots:
     dependencies:
       '@floating-ui/utils': 0.2.9
 
+  '@floating-ui/core@1.7.1':
+    dependencies:
+      '@floating-ui/utils': 0.2.9
+
   '@floating-ui/dom@1.7.0':
     dependencies:
       '@floating-ui/core': 1.7.0
       '@floating-ui/utils': 0.2.9
 
-  '@floating-ui/react-dom@2.1.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+  '@floating-ui/dom@1.7.1':
     dependencies:
-      '@floating-ui/dom': 1.7.0
+      '@floating-ui/core': 1.7.1
+      '@floating-ui/utils': 0.2.9
+
+  '@floating-ui/react-dom@2.1.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+    dependencies:
+      '@floating-ui/dom': 1.7.1
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
 
-  '@floating-ui/react@0.27.10(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+  '@floating-ui/react@0.27.11(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
-      '@floating-ui/react-dom': 2.1.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@floating-ui/react-dom': 2.1.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@floating-ui/utils': 0.2.9
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
@@ -9748,11 +9763,11 @@ snapshots:
     dependencies:
       defer-to-connect: 2.0.1
 
-  '@tanstack/query-core@5.79.0': {}
+  '@tanstack/query-core@5.79.1': {}
 
-  '@tanstack/react-query@5.79.0(react@19.1.0)':
+  '@tanstack/react-query@5.79.1(react@19.1.0)':
     dependencies:
-      '@tanstack/query-core': 5.79.0
+      '@tanstack/query-core': 5.79.1
       react: 19.1.0
 
   '@testing-library/dom@10.1.0':
@@ -15343,11 +15358,11 @@ snapshots:
 
   yoctocolors-cjs@2.1.2: {}
 
-  zod-to-json-schema@3.24.5(zod@3.25.46):
+  zod-to-json-schema@3.24.5(zod@3.25.48):
     dependencies:
-      zod: 3.25.46
+      zod: 3.25.48
 
-  zod@3.25.46: {}
+  zod@3.25.48: {}
 
   zone.js@0.15.0: {}
 
