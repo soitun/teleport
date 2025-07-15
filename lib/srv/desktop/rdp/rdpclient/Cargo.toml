@@ -39,9 +39,9 @@ uuid = { version = "1.16.0", features = ["v4"] }
 url = "2.5.4"
 picky = { version = "7.0.0-rc.11", default-features = false }
 picky-asn1-der = "0.5.2"
-picky-asn1-x509 = "0.14.4"
+picky-asn1-x509 = "0.14.5"
 reqwest = { version = "0.12", default-features = false }
-rustls = { version = "0.23.28", default-features = false, features = [
+rustls = { version = "0.23.29", default-features = false, features = [
     "aws-lc-rs",
 ] }
 
