@@ -233,7 +233,7 @@ require (
 	github.com/yusufpapurcu/wmi v1.2.4
 	github.com/zclconf/go-cty v1.16.3
 	github.com/zitadel/oidc/v3 v3.45.0
-	gitlab.com/gitlab-org/api/client-go v1.2.0
+	gitlab.com/gitlab-org/api/client-go v1.8.1
 	go.etcd.io/etcd/api/v3 v3.6.5
 	go.etcd.io/etcd/client/v3 v3.6.5
 	go.mongodb.org/mongo-driver v1.17.6
