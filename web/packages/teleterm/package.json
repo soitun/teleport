@@ -52,7 +52,7 @@
     "react-dnd": "^14.0.4",
     "react-dnd-html5-backend": "^14.0.2",
     "whatwg-url": "^15.1.0",
-    "zod": "^4.2.1"
+    "zod": "^4.3.6"
   },
   "productName": "Teleport Connect"
 }
