@@ -291,6 +291,8 @@ func (e *EventsService) NewWatcher(ctx context.Context, watch types.Watch) (type
 			parser = newInferenceSecretParser()
 		case types.KindRetrievalModel:
 			parser = newRetrievalModelParser()
+		case types.KindValidatedMFAChallenge:
+			parser = newValidatedMFAChallengeParser()
 		default:
 			if watch.AllowPartialSuccess {
 				continue

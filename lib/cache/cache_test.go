@@ -2001,6 +2001,7 @@ func TestCacheWatchKindExistsInEvents(t *testing.T) {
 		types.KindInferenceSecret:                   types.Resource153ToLegacy(new(summaryv1.InferenceSecret)),
 		types.KindInferencePolicy:                   types.Resource153ToLegacy(new(summaryv1.InferencePolicy)),
 		types.KindRetrievalModel:                    types.Resource153ToLegacy(new(summaryv1.RetrievalModel)),
+		types.KindValidatedMFAChallenge:             &types.ResourceHeader{Kind: types.KindValidatedMFAChallenge},
 	}
 
 	for name, cfg := range cases {
