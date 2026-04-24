@@ -3,8 +3,8 @@ module github.com/gravitational/teleport/build.assets/tooling
 go 1.25.9
 
 require (
-	buf.build/go/bufplugin v0.9.0
-	github.com/DataDog/datadog-agent/pkg/template v0.77.2
+	buf.build/go/bufplugin v0.10.0
+	github.com/DataDog/datadog-agent/pkg/template v0.78.0
 	github.com/Masterminds/sprig/v3 v3.3.0
 	github.com/alecthomas/kingpin/v2 v2.4.0
 	github.com/awalterschulze/goderive v0.5.1
@@ -16,21 +16,21 @@ require (
 	github.com/gravitational/trace v1.5.3
 	github.com/stretchr/testify v1.11.1
 	github.com/waigani/diffparser v0.0.0-20190828052634-7391f219313d
-	golang.org/x/mod v0.34.0
+	golang.org/x/mod v0.35.0
 	golang.org/x/oauth2 v0.36.0
-	golang.org/x/tools v0.43.0
+	golang.org/x/tools v0.44.0
 	google.golang.org/protobuf v1.36.11
 	gopkg.in/yaml.v3 v3.0.1
 	helm.sh/helm/v3 v3.20.2
 	howett.net/plist v1.0.1
-	k8s.io/apiextensions-apiserver v0.35.1
+	k8s.io/apiextensions-apiserver v0.35.4
 )
 
 require (
-	buf.build/gen/go/bufbuild/bufplugin/protocolbuffers/go v1.36.3-20250121211742-6d880cc6cc8d.1 // indirect
-	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.11-20251209175733-2a1774d88802.1 // indirect
-	buf.build/gen/go/pluginrpc/pluginrpc/protocolbuffers/go v1.36.3-20241007202033-cf42259fcbfc.1 // indirect
-	buf.build/go/protovalidate v1.1.0 // indirect
+	buf.build/gen/go/bufbuild/bufplugin/protocolbuffers/go v1.36.11-20250718181942-e35f9b667443.1 // indirect
+	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.11-20260209202127-80ab13bee0bf.1 // indirect
+	buf.build/gen/go/pluginrpc/pluginrpc/protocolbuffers/go v1.36.11-20241007202033-cf42259fcbfc.1 // indirect
+	buf.build/go/protovalidate v1.1.3 // indirect
 	buf.build/go/spdx v0.2.0 // indirect
 	cel.dev/expr v0.25.1 // indirect
 	cloud.google.com/go/auth v0.18.2 // indirect
@@ -280,9 +280,9 @@ require (
 	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.5.1 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	k8s.io/api v0.35.1 // indirect
-	k8s.io/apimachinery v0.35.1 // indirect
-	k8s.io/client-go v0.35.1 // indirect
+	k8s.io/api v0.35.4 // indirect
+	k8s.io/apimachinery v0.35.4 // indirect
+	k8s.io/client-go v0.35.4 // indirect
 	k8s.io/klog/v2 v2.130.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20250910181357-589584f1c912 // indirect
 	k8s.io/utils v0.0.0-20251002143259-bc988d571ff4 // indirect
