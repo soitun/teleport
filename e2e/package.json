@@ -13,7 +13,7 @@
   "devDependencies": {
     "@playwright/test": "^1.62.1",
     "cbor-x": "^1.6.5",
-    "tsx": "^4.23.11",
+    "tsx": "^4.23.12",
     "undici": "^8.10.0"
   }
 }
